@@ -11,10 +11,15 @@ public class GameHandler : MonoBehaviour {
     GameObject m_base;
     GameObject m_spawn;
 
-    int m_waveNumber = -1;//trust me its gotta be -1
+    int m_waveNumber = 0;
 
     List<WaveJSON> m_waves;
     List<SlimeJSON> m_slimes;
+
+    public UnityEngine.UI.Text text;
+
+    public TextAsset slimestxt;
+    public TextAsset wavestxt;
 
     float[] m_spawnDelays;
     int[] m_spawnsLeft;
@@ -44,41 +49,62 @@ public class GameHandler : MonoBehaviour {
 
     // Use this for initialization
     void Start () {
-		//script starts disabled and will be toggling a fair bit
+        //script starts disabled and will be toggling a fair bit
 	}
 
-    void Awake()
+    public void Prep()
     {
+        m_waves = new List<WaveJSON>();
+        m_slimes = new List<SlimeJSON>();
+        text.text = "Prepping...";
+        print(slimestxt.ToString());
+        print(wavestxt.ToString());
         //prep the paths
         GameObject.FindGameObjectsWithTag("Base");
         GameObject.FindGameObjectsWithTag("Spawn");
         PrepWaves();
         PrepSlimes();
+        print("Done Prep");
+        //print some info
+        text.text = "Wave Info: \n waves:\t\t" + m_waves.Count + "\n\twave 1:\t" + m_waves[0].slimes.Length + "\n\tdelays 1:\t" + m_waves[0].delays.Length + "\n\tcounts 1:\t" + m_waves[0].counts.Length;
     }
 
     // Update is called once per frame
     void Update ()
     {
-        
+
+        string childInfo = "Total Children: " + transform.childCount;
+        for (int i = 0; i < transform.childCount; i++)
+            childInfo += "\nChild: " + i + "\tName: " + transform.GetChild(i).name;
+        print(childInfo);
 
         //check if wave is over
-        if (!m_waveComplete && transform.childCount <= 0)
+        if (m_waveComplete && transform.childCount <= 0)
         {
+            string waveInfo = "Starting wave: " + m_waveNumber + "\nWave contents\nslime\t\tdelays\t\tspawns\n";
+            for (int i = 0; i < m_waves[m_waveNumber].delays.Length; i++)
+                waveInfo += m_waves[m_waveNumber].slimes[i] + "\t" + m_waves[m_waveNumber].delays[i] + "\t" + m_waves[m_waveNumber].counts + "\n";
+            print(waveInfo);
             //reset
             m_waveComplete = false;
-            m_waveNumber++;
-            m_spawnDelays = new float[m_waves.Count];
+            m_spawnDelays = new float[m_waves[m_waveNumber].delays.Length];
+            m_spawnsLeft = new int[m_waves[m_waveNumber].counts.Length];
             //refill variables
-            for (int i = 0; i < m_waves.Count; i++)
+            for (int i = 0; i < m_waves[m_waveNumber].delays.Length; i++)
             {
                 m_spawnDelays[i] = m_waves[m_waveNumber].delays[i];
                 m_spawnsLeft[i] = m_waves[m_waveNumber].counts[i];
             }
         }
-        
+
+
+
         //wave spawning
+        bool slimesRemain = false;
         for (int i = 0; i < m_spawnDelays.Length; i++)
         {
+            if (m_spawnsLeft[i] > 0)
+                slimesRemain = true;
             //check adjust delay
             m_spawnDelays[i] -= Time.deltaTime;
             //check if we are ready to spawn, and if we have any left
@@ -89,6 +115,11 @@ public class GameHandler : MonoBehaviour {
                 m_spawnsLeft[i]--;
                 SpawnSlime(m_waves[m_waveNumber].slimes[i]);
             }
+        }
+        if (slimesRemain == false)
+        {
+            m_waveNumber++;
+            m_waveComplete = true;
         }
         
         //check for hits
@@ -108,19 +139,21 @@ public class GameHandler : MonoBehaviour {
 
     void PrepWaves()
     {
-        FileAssist file = new FileAssist();
-        file.OpenFile("Assets/UnitData/waves.txt", true);
-        List<string> fbl = file.ReadAllToMemory();
-        for (int i = 0; i < fbl.Count; i++)
+        //FileAssist file = new FileAssist();
+        //file.OpenFile(System.IO.Path.Combine(Application.streamingAssetsPath, "waves.txt"), true);
+        string[] fbl = wavestxt.ToString().Split('\n');
+        //List<string> fbl = file.ReadAllToMemory();
+        for (int i = 0; i < fbl.Length; i++)
             m_waves.Add(JsonUtility.FromJson<WaveJSON>(fbl[i]));
     }
 
     void PrepSlimes()
     {
-        FileAssist file = new FileAssist();
-        file.OpenFile("Assets/UnitData/slimes.txt", true);
-        List<string> fbl = file.ReadAllToMemory();
-        for (int i = 0; i < fbl.Count; i++)
+        //FileAssist file = new FileAssist();
+        //file.OpenFile(System.IO.Path.Combine(Application.streamingAssetsPath, "slimes.txt"), true);
+        string[] fbl = slimestxt.ToString().Split('\n');
+        //List<string> fbl = file.ReadAllToMemory();
+        for (int i = 0; i < fbl.Length; i++)
             m_slimes.Add(JsonUtility.FromJson<SlimeJSON>(fbl[i]));
     }
 

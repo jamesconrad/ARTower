@@ -28,7 +28,6 @@
         // Update is called once per frame
         void Update()
         {
-            print("hehe xD active btw");
             Frame.GetNewPlanes(ref m_newPlanes);
 
             // Iterate over planes found in this frame and instantiate corresponding GameObjects to visualize them.
@@ -38,7 +37,7 @@
                 // the origin with an identity rotation since the mesh for our prefab is updated in Unity World
                 // coordinates.
                 GameObject planeObject = Instantiate(m_trackedPlanePrefab, Vector3.zero, Quaternion.identity,
-                    transform);
+                    transform.parent);
                 planeObject.GetComponent<TrackedPlaneVisualizer>().SetTrackedPlane(m_newPlanes[i]);
 
                 // Apply a random color and grid rotation.
@@ -78,6 +77,7 @@
                 {
                     text.text = "Game ready.";
                     m_gameHandler.enabled = true;
+                    m_gameHandler.Prep();
                     this.enabled = false;
                 }
             }

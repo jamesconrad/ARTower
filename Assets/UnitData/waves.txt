@@ -1,2 +1,2 @@
-{"slimes":[1,2]],"delays":[3,18],"counts":[5,1]}
+{"slimes":[1,2],"delays":[3,18],"counts":[5,1]}
 {"slimes":[2],"delays":[5],"counts":[5]}

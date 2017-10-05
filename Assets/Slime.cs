@@ -24,7 +24,12 @@ public class Slime : MonoBehaviour {
     Material material;
     int numsubslimes;
     int[] subslimes;
+    float velocity;
+
     public int damage;
+    
+
+    private float lerpt;
 
     public void ApplySlimeJSON(GameHandler.SlimeJSON s)
     {
@@ -35,6 +40,7 @@ public class Slime : MonoBehaviour {
         transform.localScale = new Vector3(s.scalex, s.scaley, s.scalez);
         numsubslimes = s.numsubslimes;
         damage = s.damage;
+        velocity = s.velocity;
     }
 
     public void UpdateTargetPositions(Transform _baseTransform, Transform _spawnTransform)
@@ -46,12 +52,14 @@ public class Slime : MonoBehaviour {
 	// Use this for initialization
 	void Start ()
     {
-        
+        lerpt = 0;
 	}
 
 	// Update is called once per frame
 	void Update ()
     {
+        transform.position = Vector3.Lerp(baseTransform.position, spawnTransform.position, lerpt);
+        lerpt += (float)(Time.deltaTime * 0.1) * velocity;
         //move towards the thing.
 	}
 
