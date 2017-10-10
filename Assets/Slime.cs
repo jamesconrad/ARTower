@@ -18,8 +18,8 @@ public class Slime : MonoBehaviour {
     public GameObject deathParticles;
 
     //private static bool initialized = false;
-    private static Transform baseTransform;
-    private static Transform spawnTransform;
+    public static Transform baseTransform;
+    public static Transform spawnTransform;
 
     Material material;
     int numsubslimes;
@@ -33,9 +33,11 @@ public class Slime : MonoBehaviour {
 
     public void ApplySlimeJSON(GameHandler.SlimeJSON s)
     {
+        material = GetComponent<Renderer>().material;
         subslimes = new int[s.subslimes.Length];
         for (int i = 0; i < subslimes.Length; i++)
             subslimes[i] = s.subslimes[i];
+        
         material.color = new Color(s.colourr, s.colourg, s.colourb);
         transform.localScale = new Vector3(s.scalex, s.scaley, s.scalez);
         numsubslimes = s.numsubslimes;
@@ -58,7 +60,7 @@ public class Slime : MonoBehaviour {
 	// Update is called once per frame
 	void Update ()
     {
-        transform.position = Vector3.Lerp(baseTransform.position, spawnTransform.position, lerpt);
+        transform.position = Vector3.Lerp(spawnTransform.position, baseTransform.position, lerpt);
         lerpt += (float)(Time.deltaTime * 0.1) * velocity;
         //move towards the thing.
 	}

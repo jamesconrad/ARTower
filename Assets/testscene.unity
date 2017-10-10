@@ -526,7 +526,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: de2ebd36a0581d241b17e9502e557352, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  slimeBase: {fileID: 1755660236269230, guid: 23fb9599c43fee647bf1a425c4d7e179, type: 2}
+  slimeBase: {fileID: 1339471081654942, guid: 8216af6ca7748be4ea3e4afbdbff7c06, type: 2}
   m_camera: {fileID: 1089705155}
   text: {fileID: 8239780}
   slimestxt: {fileID: 4900000, guid: 2024686e490625e43818ca4cc91f56b5, type: 3}

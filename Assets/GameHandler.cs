@@ -56,6 +56,10 @@ public class GameHandler : MonoBehaviour {
     {
         m_waves = new List<WaveJSON>();
         m_slimes = new List<SlimeJSON>();
+        m_spawn = GameObject.FindGameObjectWithTag("Spawn");
+        m_base = GameObject.FindGameObjectWithTag("Base");
+        Slime.spawnTransform = m_spawn.transform;
+        Slime.baseTransform = m_base.transform;
         print(slimestxt.ToString());
         print(wavestxt.ToString());
         //prep the paths
@@ -69,15 +73,7 @@ public class GameHandler : MonoBehaviour {
     // Update is called once per frame
     void Update ()
     {
-        //bottom left corner wave/debugging info
-        string childInfo = "Total Children: " + transform.childCount;
-        for (int i = 0; i < transform.childCount; i++)
-            childInfo += "\nChild: " + i + "\tName: " + transform.GetChild(i).name;
-        string waveInfo = "Wave: " + m_waveNumber + "\tWave Complete: " + m_waveComplete + "\nslime\t\tdelays\t\tspawns\n";
-        for (int i = 0; i < m_waves[m_waveNumber].delays.Length; i++)
-            waveInfo += m_waves[m_waveNumber].slimes[i] + "\t" + m_waves[m_waveNumber].delays[i] + "\t" + m_waves[m_waveNumber].counts + "\n";
-        text.text = childInfo + "\n" + waveInfo;
-
+        
         //check if wave is over
         if (m_waveComplete && transform.childCount <= 0)
         {
@@ -117,7 +113,16 @@ public class GameHandler : MonoBehaviour {
             m_waveNumber++;
             m_waveComplete = true;
         }
-        
+
+        //bottom left corner wave/debugging info
+        string childInfo = "Total Children: " + transform.childCount;
+        for (int i = 0; i < transform.childCount; i++)
+            childInfo += "\nChild: " + i + "\tName: " + transform.GetChild(i).name;
+        string waveInfo = "Wave: " + m_waveNumber + "\tWave Complete: " + m_waveComplete + "\nslime\t\tdelays\t\tspawns\n";
+        for (int i = 0; i < m_waves[m_waveNumber].delays.Length; i++)
+            waveInfo += m_waves[m_waveNumber].slimes[i] + "\t\t\t\t" + m_spawnDelays[i] + "\t" + m_spawnsLeft[i] + "\n";
+        text.text = childInfo + "\n" + waveInfo;
+
         //check for hits
         Touch touch;
         if (Input.touchCount < 1 || (touch = Input.GetTouch(0)).phase != TouchPhase.Began)
@@ -156,7 +161,7 @@ public class GameHandler : MonoBehaviour {
     public void SpawnSlime(int id)
     {
         GameObject go;
-        go = Instantiate(slimeBase, transform.position, transform.rotation) as GameObject;
+        go = Instantiate(slimeBase, m_spawn.transform.position, m_spawn.transform.rotation) as GameObject;
         go.transform.parent = transform;
         go.GetComponent<Slime>().ApplySlimeJSON(m_slimes[id]);
     }
