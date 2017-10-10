@@ -123,6 +123,9 @@ public class GameHandler : MonoBehaviour {
             waveInfo += m_waves[m_waveNumber].slimes[i] + "\t\t\t\t" + m_spawnDelays[i] + "\t" + m_spawnsLeft[i] + "\n";
         text.text = childInfo + "\n" + waveInfo;
 
+        Ray ray = m_camera.ScreenPointToRay(new Vector3(m_camera.pixelWidth / 2, m_camera.pixelHeight / 2, 0));
+        Debug.DrawRay(ray.origin, ray.direction * 10, Color.yellow);
+
         //check for hits
         Touch touch;
         if (Input.touchCount < 1 || (touch = Input.GetTouch(0)).phase != TouchPhase.Began)
@@ -132,7 +135,7 @@ public class GameHandler : MonoBehaviour {
 
         // dir camera.ScreenPointToRay(touch.position)
         RaycastHit hit;
-        if (Physics.Raycast(m_camera.ScreenPointToRay(new Vector3(0, 0, 0)), out hit, 1024.0f) && hit.transform.tag == "Slime")
+        if (Physics.Raycast(m_camera.ScreenPointToRay(new Vector3(m_camera.pixelWidth/2, m_camera.pixelHeight /2, 0)), out hit, 1024.0f) && hit.transform.tag == "Slime")
         {
             hit.collider.gameObject.GetComponent<Slime>().OnHit();
         }

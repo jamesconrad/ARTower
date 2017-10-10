@@ -71,6 +71,12 @@ public class Slime : MonoBehaviour {
         Destroy(gameObject);
     }
 
+    private void OnCollisionEnter(Collision collision)
+    {
+        if (collision.transform.tag == "Base")
+            OnHitBase();
+    }
+
     public void OnHitBase()
     {
         //Just do particles
@@ -87,7 +93,20 @@ public class Slime : MonoBehaviour {
             transform.parent.GetComponent<GameHandler>().SpawnSlime(subslimes[i]);
         //play death particles
         GameObject go;
-        go = Instantiate(deathParticles, transform.position, transform.rotation) as GameObject;
-        go.transform.parent = transform;
+        go = Instantiate(deathParticles, transform.position, Quaternion.Euler(-90.0f,0.0f,0.0f)) as GameObject;
+        go.transform.parent = transform.parent;
+        go.transform.localScale = transform.localScale;
+        ParticleSystem.ColorOverLifetimeModule m = go.GetComponent<ParticleSystem>().colorOverLifetime;
+        Gradient g = new Gradient();
+        g.SetKeys(
+            new GradientColorKey[] {
+                new GradientColorKey(material.color, 0.0f),
+                new GradientColorKey(material.color, 1.0f)}, 
+            new GradientAlphaKey[] {
+                new GradientAlphaKey(1.0f, 0.0f),
+                new GradientAlphaKey(1.0f, 0.75f),
+                new GradientAlphaKey(0.0f, 1.0f) });
+        m.enabled = true;
+        m.color = g;
     }
 }
