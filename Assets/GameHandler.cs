@@ -7,6 +7,7 @@ public class GameHandler : MonoBehaviour {
     public GameObject slimeBase;
     public Camera m_camera;
 
+    Path m_path;
 
     GameObject m_base;
     GameObject m_spawn;
@@ -51,6 +52,11 @@ public class GameHandler : MonoBehaviour {
     void Start () {
         //script starts disabled and will be toggling a fair bit
 	}
+
+    public void SetPath(Path p)
+    {
+        m_path = p;
+    }
 
     public void Prep()
     {
@@ -108,7 +114,7 @@ public class GameHandler : MonoBehaviour {
                 SpawnSlime(m_waves[m_waveNumber].slimes[i]);
             }
         }
-        if (slimesRemain == false)
+        if (slimesRemain == false && m_waveComplete == false)
         {
             m_waveNumber++;
             m_waveComplete = true;
@@ -118,8 +124,8 @@ public class GameHandler : MonoBehaviour {
         string childInfo = "Total Children: " + transform.childCount;
         for (int i = 0; i < transform.childCount; i++)
             childInfo += "\nChild: " + i + "\tName: " + transform.GetChild(i).name;
-        string waveInfo = "Wave: " + m_waveNumber + "\tWave Complete: " + m_waveComplete + "\nslime\t\tdelays\t\tspawns\n";
-        for (int i = 0; i < m_waves[m_waveNumber].delays.Length; i++)
+        string waveInfo = "Wave: " + m_waveNumber + "\tWave Complete: " + m_waveComplete + "\tm_waves.Length: " + m_waves.Count + "\nslime\t\tdelays\t\tspawns\n";
+        for (int i = 0; m_waveNumber < m_waves.Count && i < m_waves[m_waveNumber].delays.Length; i++)
             waveInfo += m_waves[m_waveNumber].slimes[i] + "\t\t\t\t" + m_spawnDelays[i] + "\t" + m_spawnsLeft[i] + "\n";
         text.text = childInfo + "\n" + waveInfo;
 
@@ -166,6 +172,6 @@ public class GameHandler : MonoBehaviour {
         GameObject go;
         go = Instantiate(slimeBase, m_spawn.transform.position, m_spawn.transform.rotation) as GameObject;
         go.transform.parent = transform;
-        go.GetComponent<Slime>().ApplySlimeJSON(m_slimes[id]);
+        go.GetComponent<Slime>().ApplySlimeJSON(m_slimes[id], m_path);
     }
 }

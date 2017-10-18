@@ -26,12 +26,14 @@ public class Slime : MonoBehaviour {
     int[] subslimes;
     float velocity;
 
+    Path path;
+
     public int damage;
     
 
     private float lerpt;
 
-    public void ApplySlimeJSON(GameHandler.SlimeJSON s)
+    public void ApplySlimeJSON(GameHandler.SlimeJSON s, Path p)
     {
         material = GetComponent<Renderer>().material;
         subslimes = new int[s.subslimes.Length];
@@ -43,6 +45,7 @@ public class Slime : MonoBehaviour {
         numsubslimes = s.numsubslimes;
         damage = s.damage;
         velocity = s.velocity;
+        path = p;
     }
 
     public void UpdateTargetPositions(Transform _baseTransform, Transform _spawnTransform)
@@ -67,6 +70,7 @@ public class Slime : MonoBehaviour {
 
     public void OnHit()
     {
+        print("Hit");
         OnDeath();
         Destroy(gameObject);
     }

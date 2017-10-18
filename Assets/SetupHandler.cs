@@ -12,6 +12,9 @@
         public Camera m_firstPersonCamera;
         public GameObject m_slimeCave;
         public GameObject m_homeBase;
+        public GameObject m_flag;
+        public UnityEngine.UI.Button m_beginButton;
+        private Path m_path;
 
         public GameHandler m_gameHandler;
 
@@ -22,7 +25,8 @@
         // Use this for initialization
         void Start()
         {
-
+            m_path = GetComponent<Path>();
+            m_beginButton.onClick.AddListener(BeginButtonPressed);
         }
 
         // Update is called once per frame
@@ -51,6 +55,8 @@
                 return;
             }
 
+            m_path.DrawLinearCurve();
+
             TrackableHit hit;
             TrackableHitFlag raycastFilter = TrackableHitFlag.PlaneWithinBounds | TrackableHitFlag.PlaneWithinPolygon;
 
@@ -62,8 +68,22 @@
 
                 // Intanstiate an object as a child of the anchor; it's transform will now benefit
                 // from the anchor's tracking.
-                var newObject = Instantiate((state == 0 ? m_slimeCave : m_homeBase), hit.Point, Quaternion.identity,
-                    anchor.transform);
+                GameObject newObject;
+                if (state == 0)
+                {
+                    newObject = Instantiate(m_slimeCave, hit.Point, Quaternion.identity, anchor.transform);
+                    m_path.AddPoint(newObject.transform.position);
+                }
+                else if (state == 1)
+                {
+                    newObject = Instantiate(m_homeBase, hit.Point, Quaternion.identity, anchor.transform);
+                    m_path.AddEndPoint(newObject.transform.position);
+                }
+                else
+                {
+                    newObject = Instantiate(m_flag, hit.Point, Quaternion.identity, anchor.transform);
+                    m_path.AddPoint(newObject.transform.position);
+                }
 
                 // Andy should look at the camera but still be flush with the plane.
                 newObject.transform.LookAt(m_firstPersonCamera.transform);
@@ -73,13 +93,24 @@
                 // (occurs after anchor updates).
                 newObject.GetComponent<PlaneAttachment>().Attach(hit.Plane);
                 state++;
-                if (state >= 2)
+                if (state >= 2 && m_beginButton.enabled == false)
                 {
-                    text.text = "Game ready.";
-                    m_gameHandler.enabled = true;
-                    m_gameHandler.Prep();
-                    this.enabled = false;
+                    text.text = "Now tap wherever you want corners, and click Begin Game";
+                    m_beginButton.transform.gameObject.SetActive(true);
                 }
+            }
+        }
+
+        void BeginButtonPressed()
+        {
+            if (state >= 2)
+            {
+                m_beginButton.transform.gameObject.SetActive(false);
+                m_path.BuildCurve();
+                m_gameHandler.SetPath(m_path);
+                m_gameHandler.enabled = true;
+                m_gameHandler.Prep();
+                this.enabled = false;
             }
         }
     }
