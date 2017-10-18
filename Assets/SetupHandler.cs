@@ -25,7 +25,7 @@
         // Use this for initialization
         void Start()
         {
-            m_path = GetComponent<Path>();
+            m_path = gameObject.AddComponent<Path>();
             m_beginButton.onClick.AddListener(BeginButtonPressed);
         }
 

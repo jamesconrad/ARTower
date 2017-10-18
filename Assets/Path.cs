@@ -26,7 +26,7 @@ public class Path : MonoBehaviour {
     public void DrawLinearCurve()
     {
         for (int i = 0; i + 1 < m_points.Count; i++)
-            Debug.DrawLine(m_points[i], m_points[i + 1], Color.green);
-        Debug.DrawLine(m_points[m_points.Count - 1], m_endPoint, Color.green);
+            Debug.DrawLine(m_points[i], m_points[i + 1], Color.Lerp(Color.green, Color.red, i / m_points.Count));
+        Debug.DrawLine(m_points[m_points.Count - 1], m_endPoint, Color.red);
     }
 }

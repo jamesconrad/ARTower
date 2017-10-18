@@ -662,7 +662,6 @@ GameObject:
   - component: {fileID: 389997926}
   - component: {fileID: 389997925}
   - component: {fileID: 389997927}
-  - component: {fileID: 389997928}
   m_Layer: 0
   m_Name: Controller
   m_TagString: Untagged
@@ -720,17 +719,6 @@ MonoBehaviour:
   text: {fileID: 8239780}
   slimestxt: {fileID: 4900000, guid: 2024686e490625e43818ca4cc91f56b5, type: 3}
   wavestxt: {fileID: 4900000, guid: 588ec38bdbbc75d4e99fd50efa738700, type: 3}
---- !u!114 &389997928
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 389997924}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f272cf014af6d8d49b9842148ecbed3e, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1 &793395857
 GameObject:
   m_ObjectHideFlags: 0
