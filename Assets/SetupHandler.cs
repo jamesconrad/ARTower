@@ -48,14 +48,14 @@
                 planeObject.GetComponent<Renderer>().material.SetColor("_GridColor", new Color(0.956f, 0.262f, 0.211f));
                 planeObject.GetComponent<Renderer>().material.SetFloat("_UvRotation", Random.Range(0.0f, 360.0f));
             }
-            
+
+            m_path.DrawLinearCurve();
+
             Touch touch;
             if (Input.touchCount < 1 || (touch = Input.GetTouch(0)).phase != TouchPhase.Began)
             {
                 return;
             }
-
-            m_path.DrawLinearCurve();
 
             TrackableHit hit;
             TrackableHitFlag raycastFilter = TrackableHitFlag.PlaneWithinBounds | TrackableHitFlag.PlaneWithinPolygon;
@@ -93,6 +93,7 @@
                 // (occurs after anchor updates).
                 newObject.GetComponent<PlaneAttachment>().Attach(hit.Plane);
                 state++;
+                print(state);
                 if (state >= 2 && m_beginButton.enabled == false)
                 {
                     text.text = "Now tap wherever you want corners, and click Begin Game";
