@@ -64,7 +64,7 @@ public class Slime : MonoBehaviour {
 	void Update ()
     {
         transform.position = path.GetPosition(linesegment, lerpt);
-        lerpt += (float)(Time.deltaTime * 0.1) * velocity;
+        lerpt += (float)(Time.deltaTime) * velocity;
         if (lerpt >= 1)
         {
             lerpt = 0;

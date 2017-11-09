@@ -7,6 +7,10 @@ public class GameHandler : MonoBehaviour {
     public GameObject slimeBase;
     public Camera m_camera;
 
+    public GameObject notification;
+    public GameObject activeUI;
+    public GameObject crosshair;
+
     Path m_path;
 
     GameObject m_base;
@@ -63,6 +67,7 @@ public class GameHandler : MonoBehaviour {
 
     public void Prep()
     {
+        crosshair.SetActive(true);
         m_waves = new List<WaveJSON>();
         m_slimes = new List<SlimeJSON>();
         m_spawn = GameObject.FindGameObjectWithTag("Spawn");
@@ -82,7 +87,15 @@ public class GameHandler : MonoBehaviour {
     // Update is called once per frame
     void Update ()
     {
-        
+        if (curHealth <= 0)
+        {
+            notification.SetActive(true);
+            activeUI.SetActive(false);
+            crosshair.SetActive(false);
+            notification.GetComponentInChildren<UnityEngine.UI.Text>().text = "Game Over";
+        }
+
+
         //check if wave is over
         if (m_waveComplete && transform.childCount <= 0)
         {
@@ -123,14 +136,6 @@ public class GameHandler : MonoBehaviour {
             m_waveComplete = true;
         }
 
-        //bottom left corner wave/debugging info
-        string childInfo = "Total Children: " + transform.childCount;
-        for (int i = 0; i < transform.childCount; i++)
-            childInfo += "\nChild: " + i + "\tName: " + transform.GetChild(i).name;
-        string waveInfo = "Wave: " + m_waveNumber + "\tWave Complete: " + m_waveComplete + "\tm_waves.Length: " + m_waves.Count + "\nslime\t\tdelays\t\tspawns\n";
-        for (int i = 0; m_waveNumber < m_waves.Count && i < m_waves[m_waveNumber].delays.Length; i++)
-            waveInfo += m_waves[m_waveNumber].slimes[i] + "\t\t\t\t" + m_spawnDelays[i] + "\t" + m_spawnsLeft[i] + "\n";
-        text.text = childInfo + "\n" + waveInfo;
 
         Ray ray = m_camera.ScreenPointToRay(new Vector3(m_camera.pixelWidth / 2, m_camera.pixelHeight / 2, 0));
         Debug.DrawRay(ray.origin, ray.direction * 10, Color.yellow);
@@ -148,6 +153,15 @@ public class GameHandler : MonoBehaviour {
         {
             hit.collider.gameObject.GetComponent<Slime>().OnHit();
         }
+        
+        //bottom left corner wave/debugging info
+        //string childInfo = "Total Children: " + transform.childCount;
+        //for (int i = 0; i < transform.childCount; i++)
+        //    childInfo += "\nChild: " + i + "\tName: " + transform.GetChild(i).name;
+        //string waveInfo = "Wave: " + m_waveNumber + "\tWave Complete: " + m_waveComplete + "\tm_waves.Length: " + m_waves.Count + "\nslime\t\tdelays\t\tspawns\n";
+        //for (int i = 0; m_waveNumber < m_waves.Count && i < m_waves[m_waveNumber].delays.Length; i++)
+        //    waveInfo += m_waves[m_waveNumber].slimes[i] + "\t\t\t\t" + m_spawnDelays[i] + "\t" + m_spawnsLeft[i] + "\n";
+        //text.text = childInfo + "\n" + waveInfo;
     }
 
     void PrepWaves()

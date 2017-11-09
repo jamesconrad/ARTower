@@ -13,7 +13,12 @@
         public GameObject m_slimeCave;
         public GameObject m_homeBase;
         public GameObject m_flag;
-        public UnityEngine.UI.Button m_beginButton;
+        public UnityEngine.UI.Button m_beginButton1;
+        public UnityEngine.UI.Button m_beginButton2;
+        public UnityEngine.UI.Button m_beginButton3;
+        public GameObject UI1;
+        public GameObject UI2;
+        public GameObject UI3;
         private Path m_path;
 
         public GameHandler m_gameHandler;
@@ -28,7 +33,9 @@
         {
             m_path = gameObject.AddComponent<Path>();
             m_path.lineRenderer = gameObject.GetComponent<LineRenderer>();
-            m_beginButton.onClick.AddListener(BeginButtonPressed);
+            m_beginButton1.onClick.AddListener(BeginButtonPressed1);
+            m_beginButton2.onClick.AddListener(BeginButtonPressed2);
+            m_beginButton3.onClick.AddListener(BeginButtonPressed3);
         }
 
         // Update is called once per frame
@@ -97,27 +104,75 @@
                     newObject.transform.rotation.eulerAngles.y, newObject.transform.rotation.z);
                 // Use a plane attachment component to maintain Andy's y-offset from the plane
                 // (occurs after anchor updates).
-                newObject.GetComponent<PlaneAttachment>().Attach(hit.Plane);
+                //newObject.GetComponent<PlaneAttachment>().Attach(hit.Plane);
                 state++;
-                if (state >= 2)
+                if (state == 2)
                 {
-                    m_beginButton.interactable = true;
-                    m_beginButton.GetComponentInChildren<UnityEngine.UI.Text>().text = "Begin Game.";
-                    m_beginButton.GetComponent<RectTransform>().localPosition = new Vector3(0, -150, 0);
+                    m_beginButton1.GetComponentInChildren<UnityEngine.UI.Text>().text = "Begin Game. UI1";
+                    m_beginButton1.GetComponent<RectTransform>().localPosition = new Vector3(-340, -150, 0);
+                    
+                    m_beginButton2.GetComponentInChildren<UnityEngine.UI.Text>().text = "Begin Game. UI2";
+                    m_beginButton2.GetComponent<RectTransform>().localPosition = new Vector3(0, -150, 0);
+                    
+                    m_beginButton3.GetComponentInChildren<UnityEngine.UI.Text>().text = "Begin Game. UI3";
+                    m_beginButton3.GetComponent<RectTransform>().localPosition = new Vector3(340, -150, 0);
                 }
             }
         }
 
-        void BeginButtonPressed()
+        void BeginButtonPressed1()
         {
             if (state >= 2)
             {
-                m_beginButton.interactable = true;
-                m_beginButton.GetComponentInChildren<UnityEngine.UI.Text>().text = "";
-                m_beginButton.GetComponent<RectTransform>().localPosition = new Vector3(-1000, 1000, 0);
+                m_beginButton1.GetComponentInChildren<UnityEngine.UI.Text>().text = "";
+                m_beginButton1.GetComponent<RectTransform>().localPosition = new Vector3(-1000, 1000, 0);
+                m_beginButton2.GetComponentInChildren<UnityEngine.UI.Text>().text = "";
+                m_beginButton2.GetComponent<RectTransform>().localPosition = new Vector3(-1000, 1000, 0);
+                m_beginButton3.GetComponentInChildren<UnityEngine.UI.Text>().text = "";
+                m_beginButton3.GetComponent<RectTransform>().localPosition = new Vector3(-1000, 1000, 0);
                 notification.SetActive(false);
                 m_gameHandler.SetPath(m_path);
                 m_gameHandler.enabled = true;
+                m_gameHandler.activeUI = UI1;
+                m_gameHandler.activeUI.SetActive(true);
+                m_gameHandler.Prep();
+                this.enabled = false;
+            }
+        }
+        void BeginButtonPressed2()
+        {
+            if (state >= 2)
+            {
+                m_beginButton1.GetComponentInChildren<UnityEngine.UI.Text>().text = "";
+                m_beginButton1.GetComponent<RectTransform>().localPosition = new Vector3(-1000, 1000, 0);
+                m_beginButton2.GetComponentInChildren<UnityEngine.UI.Text>().text = "";
+                m_beginButton2.GetComponent<RectTransform>().localPosition = new Vector3(-1000, 1000, 0);
+                m_beginButton3.GetComponentInChildren<UnityEngine.UI.Text>().text = "";
+                m_beginButton3.GetComponent<RectTransform>().localPosition = new Vector3(-1000, 1000, 0);
+                notification.SetActive(false);
+                m_gameHandler.SetPath(m_path);
+                m_gameHandler.enabled = true;
+                m_gameHandler.activeUI = UI2;
+                m_gameHandler.activeUI.SetActive(true);
+                m_gameHandler.Prep();
+                this.enabled = false;
+            }
+        }
+        void BeginButtonPressed3()
+        {
+            if (state >= 2)
+            {
+                m_beginButton1.GetComponentInChildren<UnityEngine.UI.Text>().text = "";
+                m_beginButton1.GetComponent<RectTransform>().localPosition = new Vector3(-1000, 1000, 0);
+                m_beginButton2.GetComponentInChildren<UnityEngine.UI.Text>().text = "";
+                m_beginButton2.GetComponent<RectTransform>().localPosition = new Vector3(-1000, 1000, 0);
+                m_beginButton3.GetComponentInChildren<UnityEngine.UI.Text>().text = "";
+                m_beginButton3.GetComponent<RectTransform>().localPosition = new Vector3(-1000, 1000, 0);
+                notification.SetActive(false);
+                m_gameHandler.SetPath(m_path);
+                m_gameHandler.enabled = true;
+                m_gameHandler.activeUI = UI3;
+                m_gameHandler.activeUI.SetActive(true);
                 m_gameHandler.Prep();
                 this.enabled = false;
             }

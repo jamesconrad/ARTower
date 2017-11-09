@@ -1,2 +1,17 @@
 {"slimes":[0,1],"delays":[3,18],"counts":[5,1]}
 {"slimes":[1],"delays":[5],"counts":[5]}
+{"slimes":[0,2],"delays":[1,5],"counts":[10,2]}
+{"slimes":[0,1,2],"delays":[1,3,9],"counts":[15,10,5]}
+{"slimes":[0,1,2],"delays":[1,3,9],"counts":[20,15,10]}
+{"slimes":[0,1,2],"delays":[1,3,9],"counts":[25,20,15]}
+{"slimes":[0,1,2],"delays":[1,3,9],"counts":[30,25,20]}
+{"slimes":[0,1,2],"delays":[1,3,9],"counts":[35,30,25]}
+{"slimes":[0,1,2],"delays":[1,3,9],"counts":[40,35,30]}
+{"slimes":[0,1,2],"delays":[1,3,9],"counts":[45,40,35]}
+{"slimes":[0,1,2],"delays":[1,3,9],"counts":[50,45,40]}
+{"slimes":[0,1,2],"delays":[1,3,9],"counts":[55,50,45]}
+{"slimes":[0,1,2],"delays":[1,3,9],"counts":[60,55,50]}
+{"slimes":[0,1,2],"delays":[1,3,9],"counts":[65,60,55]}
+{"slimes":[0,1,2],"delays":[1,3,9],"counts":[70,65,60]}
+{"slimes":[0,1,2],"delays":[1,3,9],"counts":[75,70,65]}
+{"slimes":[0,1,2],"delays":[1,3,9],"counts":[80,75,70]}

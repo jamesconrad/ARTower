@@ -11,16 +11,16 @@ public class WaveDisplayer : MonoBehaviour {
     private int displayedWave;
 
 	// Update is called once per frame
-	void Update ()
+	void LateUpdate ()
     {
         if (!game.isActiveAndEnabled)
             return;
 
-        if (displayedWave != game.m_waveNumber)
+        if (displayedWave != game.m_waveNumber + 1)
         {
             //purge children
-            for (int i = 0; i < transform.childCount; i++)
-                Destroy(transform.GetChild(0));
+            foreach (Transform child in transform)
+                Destroy(child.gameObject);
 
             displayedWave = game.m_waveNumber;
 
