@@ -67,20 +67,24 @@ public class GameHandler : MonoBehaviour {
 
     public void Prep()
     {
+        Slime.SetPath(ref m_path);
+
         crosshair.SetActive(true);
         m_waves = new List<WaveJSON>();
         m_slimes = new List<SlimeJSON>();
         m_spawn = GameObject.FindGameObjectWithTag("Spawn");
         m_base = GameObject.FindGameObjectWithTag("Base");
+
+        m_spawn.transform.LookAt(m_path.Point(m_path.Count() - 1));
+        m_spawn.transform.rotation = Quaternion.Euler(0.0f, m_spawn.transform.rotation.eulerAngles.y, m_spawn.transform.rotation.z);
+        m_base.transform.LookAt(m_path.Point(1));
+        m_base.transform.rotation = Quaternion.Euler(0.0f, m_base.transform.rotation.eulerAngles.y, m_base.transform.rotation.z);
+
         Slime.spawnTransform = m_spawn.transform;
         Slime.baseTransform = m_base.transform;
-        print(slimestxt.ToString());
-        print(wavestxt.ToString());
-        //prep the paths
-        GameObject.FindGameObjectsWithTag("Base");
-        GameObject.FindGameObjectsWithTag("Spawn");
         PrepWaves();
         PrepSlimes();
+
         print("Done Prep");
     }
 
@@ -184,7 +188,7 @@ public class GameHandler : MonoBehaviour {
         go = Instantiate(slimeBase, m_spawn.transform.position, m_spawn.transform.rotation) as GameObject;
         go.transform.parent = transform;
         Slime slime = go.GetComponent<Slime>();
-        slime.ApplySlimeJSON(m_slimes[id], m_path);
+        slime.ApplySlimeJSON(m_slimes[id]);
         slime.linesegment = lineseg;
         slime.lerpt = tval + Random.Range(-0.1f, 0.1f);
     }

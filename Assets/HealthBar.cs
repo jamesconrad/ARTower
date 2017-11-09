@@ -6,6 +6,9 @@ public class HealthBar : MonoBehaviour {
 
     public GameHandler game;
     public UnityEngine.UI.RawImage image;
+    public RectTransform rectTransform;
+    public float baseWidth;
+    public float baseHeight;
 
 	// Use this for initialization
 	void Start () {
@@ -13,9 +16,10 @@ public class HealthBar : MonoBehaviour {
 	}
 	
 	// Update is called once per frame
-	void Update () {
-        image.transform.localScale = new Vector3(Mathf.Clamp(game.maxHealth / game.curHealth, 0f, 1f),
-                                   image.transform.localScale.y,
-                                   image.transform.localScale.z);
+	void Update ()
+    {
+        float width = baseWidth * (game.curHealth / game.maxHealth);
+        //image.rectTransform.localScale = new Vector3(Mathf.Clamp(width, 0f, baseWidth), rectTransform.localScale.y, rectTransform.localScale.z);
+        rectTransform.sizeDelta = new Vector2(Mathf.Clamp(width, 0f, baseWidth), baseHeight);
     }
 }

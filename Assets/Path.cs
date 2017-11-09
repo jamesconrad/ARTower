@@ -13,6 +13,16 @@ public class Path : MonoBehaviour {
         m_points = new List<Vector3>();
     }
 
+    public int Count()
+    {
+        return m_points.Count;
+    }
+
+    public Vector3 Point(int index)
+    {
+        return m_points[index];
+    }
+
     public void AddPoint(Vector3 p)
     {
         m_points.Add(p);
@@ -38,7 +48,6 @@ public class Path : MonoBehaviour {
 
     public Vector3 GetPosition(int linesegment, float tval)
     {
-
         return Vector3.Lerp(m_points[linesegment], m_points[linesegment + 1], tval);
     }
 }

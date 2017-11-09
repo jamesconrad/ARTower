@@ -26,17 +26,20 @@ public class Slime : MonoBehaviour {
     int[] subslimes;
     float velocity;
 
-    Path path;
+    static Path path;
     public int linesegment;
     public float lerpt;
 
     public int damage;
     
-
-
-    public void ApplySlimeJSON(GameHandler.SlimeJSON s, Path p)
+    public static void SetPath(ref Path p)
     {
-        material = GetComponent<Renderer>().material;
+        path = p;
+    }
+
+    public void ApplySlimeJSON(GameHandler.SlimeJSON s)
+    {
+        material = GetComponentInChildren<Renderer>().material;
         subslimes = new int[s.subslimes.Length];
         for (int i = 0; i < subslimes.Length; i++)
             subslimes[i] = s.subslimes[i];
@@ -46,7 +49,7 @@ public class Slime : MonoBehaviour {
         numsubslimes = s.numsubslimes;
         damage = s.damage;
         velocity = s.velocity;
-        path = p;
+        //path = p;
     }
 
     public void UpdateTargetPositions(Transform _baseTransform, Transform _spawnTransform)
@@ -63,14 +66,24 @@ public class Slime : MonoBehaviour {
 	// Update is called once per frame
 	void Update ()
     {
+        if (linesegment + 1 >= path.Count())
+        {
+            OnHitBase();
+            return;
+        }
+        //transform.position = path.GetPosition(linesegment, (5.0f / path.Count()) / lerpt);
         transform.position = path.GetPosition(linesegment, lerpt);
-        lerpt += (float)(Time.deltaTime) * velocity;
+        transform.LookAt(path.Point(linesegment + 1));
+        transform.rotation = Quaternion.Euler(0.0f, transform.rotation.eulerAngles.y, transform.rotation.z);
+        //5s start to finish
+        //tval per segment = 5/segments
+        //tps / time.deltaTime = lerpt
+        lerpt += (Time.deltaTime) * velocity;
         if (lerpt >= 1)
         {
             lerpt = 0;
             linesegment++;
         }
-        //move towards the thing.
 	}
 
     public void OnHit()
@@ -80,15 +93,14 @@ public class Slime : MonoBehaviour {
         Destroy(gameObject);
     }
 
-    private void OnCollisionEnter(Collision collision)
-    {
-        if (collision.transform.tag == "Base")
-            OnHitBase();
-    }
+    //private void OnCollisionEnter(Collision collision)
+    //{
+    //    if (collision.transform.CompareTag("Base"))
+    //        OnHitBase();
+    //}
 
     public void OnHitBase()
     {
-        //Just do particles
         GameObject go;
         go = Instantiate(deathParticles, transform.position, transform.rotation) as GameObject;
         go.transform.parent = transform;

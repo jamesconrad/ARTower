@@ -8,6 +8,7 @@
     {
         private List<TrackedPlane> m_newPlanes = new List<TrackedPlane>();
         private List<TrackedPlane> m_allPlanes = new List<TrackedPlane>();
+        private List<GameObject> planes = new List<GameObject>();
         public GameObject m_trackedPlanePrefab;
         public Camera m_firstPersonCamera;
         public GameObject m_slimeCave;
@@ -56,6 +57,8 @@
                 // Apply a random color and grid rotation.
                 planeObject.GetComponent<Renderer>().material.SetColor("_GridColor", new Color(0.956f, 0.262f, 0.211f));
                 planeObject.GetComponent<Renderer>().material.SetFloat("_UvRotation", Random.Range(0.0f, 360.0f));
+
+                planes.Add(planeObject);
 
                 if (text.text == "Searching for a plane.")
                     text.text = "Tap a start point.";
@@ -124,6 +127,9 @@
         {
             if (state >= 2)
             {
+                for (int i = 0; i < planes.Count; i++)
+                    planes[i].SetActive(false);
+
                 m_beginButton1.GetComponentInChildren<UnityEngine.UI.Text>().text = "";
                 m_beginButton1.GetComponent<RectTransform>().localPosition = new Vector3(-1000, 1000, 0);
                 m_beginButton2.GetComponentInChildren<UnityEngine.UI.Text>().text = "";
@@ -143,6 +149,9 @@
         {
             if (state >= 2)
             {
+                for (int i = 0; i < planes.Count; i++)
+                    planes[i].SetActive(false);
+
                 m_beginButton1.GetComponentInChildren<UnityEngine.UI.Text>().text = "";
                 m_beginButton1.GetComponent<RectTransform>().localPosition = new Vector3(-1000, 1000, 0);
                 m_beginButton2.GetComponentInChildren<UnityEngine.UI.Text>().text = "";
@@ -162,6 +171,9 @@
         {
             if (state >= 2)
             {
+                for (int i = 0; i < planes.Count; i++)
+                    planes[i].SetActive(false);
+
                 m_beginButton1.GetComponentInChildren<UnityEngine.UI.Text>().text = "";
                 m_beginButton1.GetComponent<RectTransform>().localPosition = new Vector3(-1000, 1000, 0);
                 m_beginButton2.GetComponentInChildren<UnityEngine.UI.Text>().text = "";
