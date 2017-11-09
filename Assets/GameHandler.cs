@@ -12,18 +12,21 @@ public class GameHandler : MonoBehaviour {
     GameObject m_base;
     GameObject m_spawn;
 
-    int m_waveNumber = 0;
+    public int m_waveNumber = 0;
 
-    List<WaveJSON> m_waves;
-    List<SlimeJSON> m_slimes;
+    public List<WaveJSON> m_waves;
+    public List<SlimeJSON> m_slimes;
 
     public UnityEngine.UI.Text text;
 
     public TextAsset slimestxt;
     public TextAsset wavestxt;
 
-    float[] m_spawnDelays;
-    int[] m_spawnsLeft;
+    public float maxHealth;
+    public float curHealth;
+
+    public float[] m_spawnDelays;
+    public int[] m_spawnsLeft;
     bool m_waveComplete = true;
 
 
@@ -111,7 +114,7 @@ public class GameHandler : MonoBehaviour {
                 //spawn a new slime
                 m_spawnDelays[i] = m_waves[m_waveNumber].delays[i];
                 m_spawnsLeft[i]--;
-                SpawnSlime(m_waves[m_waveNumber].slimes[i]);
+                SpawnSlime(m_waves[m_waveNumber].slimes[i],0,0);
             }
         }
         if (slimesRemain == false && m_waveComplete == false)
@@ -149,29 +152,26 @@ public class GameHandler : MonoBehaviour {
 
     void PrepWaves()
     {
-        //FileAssist file = new FileAssist();
-        //file.OpenFile(System.IO.Path.Combine(Application.streamingAssetsPath, "waves.txt"), true);
         string[] fbl = wavestxt.ToString().Split('\n');
-        //List<string> fbl = file.ReadAllToMemory();
         for (int i = 0; i < fbl.Length; i++)
             m_waves.Add(JsonUtility.FromJson<WaveJSON>(fbl[i]));
     }
 
     void PrepSlimes()
     {
-        //FileAssist file = new FileAssist();
-        //file.OpenFile(System.IO.Path.Combine(Application.streamingAssetsPath, "slimes.txt"), true);
         string[] fbl = slimestxt.ToString().Split('\n');
-        //List<string> fbl = file.ReadAllToMemory();
         for (int i = 0; i < fbl.Length; i++)
             m_slimes.Add(JsonUtility.FromJson<SlimeJSON>(fbl[i]));
     }
 
-    public void SpawnSlime(int id)
+    public void SpawnSlime(int id, int lineseg, float tval)
     {
         GameObject go;
         go = Instantiate(slimeBase, m_spawn.transform.position, m_spawn.transform.rotation) as GameObject;
         go.transform.parent = transform;
-        go.GetComponent<Slime>().ApplySlimeJSON(m_slimes[id], m_path);
+        Slime slime = go.GetComponent<Slime>();
+        slime.ApplySlimeJSON(m_slimes[id], m_path);
+        slime.linesegment = lineseg;
+        slime.lerpt = tval + Random.Range(-0.1f, 0.1f);
     }
 }

@@ -27,11 +27,12 @@ public class Slime : MonoBehaviour {
     float velocity;
 
     Path path;
+    public int linesegment;
+    public float lerpt;
 
     public int damage;
     
 
-    private float lerpt;
 
     public void ApplySlimeJSON(GameHandler.SlimeJSON s, Path p)
     {
@@ -57,14 +58,18 @@ public class Slime : MonoBehaviour {
 	// Use this for initialization
 	void Start ()
     {
-        lerpt = 0;
 	}
 
 	// Update is called once per frame
 	void Update ()
     {
-        transform.position = Vector3.Lerp(spawnTransform.position, baseTransform.position, lerpt);
+        transform.position = path.GetPosition(linesegment, lerpt);
         lerpt += (float)(Time.deltaTime * 0.1) * velocity;
+        if (lerpt >= 1)
+        {
+            lerpt = 0;
+            linesegment++;
+        }
         //move towards the thing.
 	}
 
@@ -87,6 +92,7 @@ public class Slime : MonoBehaviour {
         GameObject go;
         go = Instantiate(deathParticles, transform.position, transform.rotation) as GameObject;
         go.transform.parent = transform;
+        transform.parent.GetComponent<GameHandler>().curHealth -= damage;
         Destroy(gameObject);
     }
 
@@ -94,7 +100,7 @@ public class Slime : MonoBehaviour {
     {
         //spawn subslimes by prefab
         for (int i = 0; i < numsubslimes; i++)
-            transform.parent.GetComponent<GameHandler>().SpawnSlime(subslimes[i]);
+            transform.parent.GetComponent<GameHandler>().SpawnSlime(subslimes[i],linesegment,lerpt);
         //play death particles
         GameObject go;
         go = Instantiate(deathParticles, transform.position, Quaternion.Euler(-90.0f,0.0f,0.0f)) as GameObject;

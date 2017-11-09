@@ -19,6 +19,7 @@
         public GameHandler m_gameHandler;
 
         public UnityEngine.UI.Text text;
+        public GameObject notification;
 
         int state = 0;
 
@@ -26,6 +27,7 @@
         void Start()
         {
             m_path = gameObject.AddComponent<Path>();
+            m_path.lineRenderer = gameObject.GetComponent<LineRenderer>();
             m_beginButton.onClick.AddListener(BeginButtonPressed);
         }
 
@@ -47,10 +49,11 @@
                 // Apply a random color and grid rotation.
                 planeObject.GetComponent<Renderer>().material.SetColor("_GridColor", new Color(0.956f, 0.262f, 0.211f));
                 planeObject.GetComponent<Renderer>().material.SetFloat("_UvRotation", Random.Range(0.0f, 360.0f));
+
+                if (text.text == "Searching for a plane.")
+                    text.text = "Tap a start point.";
             }
-
-            m_path.DrawLinearCurve();
-
+            
             Touch touch;
             if (Input.touchCount < 1 || (touch = Input.GetTouch(0)).phase != TouchPhase.Began)
             {
@@ -73,19 +76,22 @@
                 {
                     newObject = Instantiate(m_slimeCave, hit.Point, Quaternion.identity, anchor.transform);
                     m_path.AddPoint(newObject.transform.position);
+                    text.text = "Tap an end point.";
                 }
                 else if (state == 1)
                 {
                     newObject = Instantiate(m_homeBase, hit.Point, Quaternion.identity, anchor.transform);
                     m_path.AddEndPoint(newObject.transform.position);
+                    text.text = "Tap to add points to the path.";
                 }
                 else
                 {
                     newObject = Instantiate(m_flag, hit.Point, Quaternion.identity, anchor.transform);
-                    m_path.AddPoint(newObject.transform.position);
+                    m_path.InsertPoint(newObject.transform.position);
                 }
 
-                // Andy should look at the camera but still be flush with the plane.
+                m_path.BuildCurve();
+
                 newObject.transform.LookAt(m_firstPersonCamera.transform);
                 newObject.transform.rotation = Quaternion.Euler(0.0f,
                     newObject.transform.rotation.eulerAngles.y, newObject.transform.rotation.z);
@@ -93,11 +99,11 @@
                 // (occurs after anchor updates).
                 newObject.GetComponent<PlaneAttachment>().Attach(hit.Plane);
                 state++;
-                print(state);
-                if (state >= 2 && m_beginButton.enabled == false)
+                if (state >= 2)
                 {
-                    text.text = "Now tap wherever you want corners, and click Begin Game";
-                    m_beginButton.transform.gameObject.SetActive(true);
+                    m_beginButton.interactable = true;
+                    m_beginButton.GetComponentInChildren<UnityEngine.UI.Text>().text = "Begin Game.";
+                    m_beginButton.GetComponent<RectTransform>().localPosition = new Vector3(0, -150, 0);
                 }
             }
         }
@@ -106,8 +112,10 @@
         {
             if (state >= 2)
             {
-                m_beginButton.transform.gameObject.SetActive(false);
-                m_path.BuildCurve();
+                m_beginButton.interactable = true;
+                m_beginButton.GetComponentInChildren<UnityEngine.UI.Text>().text = "";
+                m_beginButton.GetComponent<RectTransform>().localPosition = new Vector3(-1000, 1000, 0);
+                notification.SetActive(false);
                 m_gameHandler.SetPath(m_path);
                 m_gameHandler.enabled = true;
                 m_gameHandler.Prep();
