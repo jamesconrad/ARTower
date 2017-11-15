@@ -151,6 +151,8 @@ public class GameHandler : MonoBehaviour {
             return;
         }
 
+        Handheld.Vibrate();
+
         // dir camera.ScreenPointToRay(touch.position)
         RaycastHit hit;
         if (Physics.Raycast(m_camera.ScreenPointToRay(new Vector3(m_camera.pixelWidth/2, m_camera.pixelHeight /2, 0)), out hit, 1024.0f) && hit.transform.tag == "Slime")
