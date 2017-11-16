@@ -26,6 +26,8 @@ public class GameHandler : MonoBehaviour {
     public TextAsset slimestxt;
     public TextAsset wavestxt;
 
+    public GameObject fireFlash;
+
     public float maxHealth;
     public float curHealth;
 
@@ -146,17 +148,18 @@ public class GameHandler : MonoBehaviour {
 
         //check for hits
         Touch touch;
-        if (Input.touchCount < 1 || (touch = Input.GetTouch(0)).phase != TouchPhase.Began)
+        if (Input.touchCount < 1 || (touch = Input.GetTouch(0)).phase != TouchPhase.Began || curHealth < 0)
         {
             return;
         }
 
-        Handheld.Vibrate();
+        Instantiate(fireFlash, notification.transform.parent);
 
         // dir camera.ScreenPointToRay(touch.position)
         RaycastHit hit;
         if (Physics.Raycast(m_camera.ScreenPointToRay(new Vector3(m_camera.pixelWidth/2, m_camera.pixelHeight /2, 0)), out hit, 1024.0f) && hit.transform.tag == "Slime")
         {
+            Handheld.Vibrate();
             hit.collider.gameObject.GetComponent<Slime>().OnHit();
         }
         

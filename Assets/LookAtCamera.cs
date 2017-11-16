@@ -8,12 +8,14 @@ public class LookAtCamera : MonoBehaviour {
 
     private void Awake()
     {
+        print("Finding camera...");
         target = Camera.main.transform;
+        print("Camera found." + target);
     }
 
     // Update is called once per frame
     void Update ()
     {
-        transform.LookAt(target.position);	
+        transform.rotation = target.rotation;
 	}
 }

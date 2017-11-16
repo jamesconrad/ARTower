@@ -32,6 +32,8 @@
         // Use this for initialization
         void Start()
         {
+            if (planes == null)
+                print("What the actual fuck?");
             m_path = gameObject.AddComponent<Path>();
             m_path.lineRenderer = gameObject.GetComponent<LineRenderer>();
             m_beginButton1.onClick.AddListener(BeginButtonPressed1);
@@ -55,7 +57,7 @@
                 planeObject.GetComponent<TrackedPlaneVisualizer>().SetTrackedPlane(m_newPlanes[i]);
 
                 // Apply a random color and grid rotation.
-                planeObject.GetComponent<Renderer>().material.SetColor("_GridColor", new Color(0.956f, 0.262f, 0.211f));
+                planeObject.GetComponent<Renderer>().material.SetColor("_GridColor", new Color(0.1f, 0.1f, 0.1f));
                 planeObject.GetComponent<Renderer>().material.SetFloat("_UvRotation", Random.Range(0.0f, 360.0f));
 
                 planes.Add(planeObject);
